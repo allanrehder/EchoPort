@@ -128,7 +128,6 @@ searchInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') searchTracks();
 });
 
-// Botão de Início - Recarrega músicas curadas
 // --- NAVEGAÇÃO ---
 const navLinks = {
     home: document.getElementById('home-link'),
@@ -287,7 +286,7 @@ async function loadGenreTracks(genre) {
 
         if (data.trackIds && data.trackIds.length > 0) {
             resultsGrid.innerHTML = '';
-            // Botão de voltar removido conforme solicitado
+            // Botão de voltar removido
             
             const trackPromises = data.trackIds.map(id => 
                 fetch(`${API_BASE}/full-track?id=${id}`).then(res => res.json()).catch(err => null)
@@ -346,97 +345,6 @@ function createArtistCard(artist) {
     `;
     
     card.addEventListener('click', () => {
-        searchInput.value = artist.name;
-        searchTracks();
-    });
-    resultsGrid.appendChild(card);
-}
-
-// 3. PLAYLISTS
-async function loadPlaylists() {
-    resultsGrid.innerHTML = '<div class="placeholder-message"><p>Buscando playlists...</p></div>';
-    document.querySelector('.section-title').innerText = 'Playlists em Alta';
-
-    try {
-        const res = await fetch(`${API_BASE}/playlists`);
-        const data = await res.json();
-
-        if (data.playlists && data.playlists.length > 0) {
-            resultsGrid.innerHTML = '';
-            data.playlists.forEach(createPlaylistCard);
-        } else {
-            resultsGrid.innerHTML = '<div class="placeholder-message"><p>Nenhuma playlist encontrada.</p></div>';
-        }
-    } catch (e) {
-        console.error("Erro Playlists:", e);
-        resultsGrid.innerHTML = '<div class="placeholder-message" style="color: #ff5555;"><p>Erro ao carregar Playlists.</p></div>';
-    }
-}
-
-// 4. ARTISTS
-async function loadArtists() {
-    resultsGrid.innerHTML = '<div class="placeholder-message"><p>Carregando artistas...</p></div>';
-    document.querySelector('.section-title').innerText = 'Artistas em Destaque';
-
-    try {
-        const res = await fetch(`${API_BASE}/artists`);
-        const data = await res.json();
-
-        if (data.artists && data.artists.length > 0) {
-            resultsGrid.innerHTML = '';
-            data.artists.forEach(createArtistCard);
-        } else {
-            resultsGrid.innerHTML = '<div class="placeholder-message"><p>Nenhum artista encontrado.</p></div>';
-        }
-    } catch (e) {
-        console.error("Erro Artists:", e);
-        resultsGrid.innerHTML = '<div class="placeholder-message" style="color: #ff5555;"><p>Erro ao carregar Artistas.</p></div>';
-    }
-}
-
-// --- CARDS ESPECÍFICOS ---
-
-function createPlaylistCard(playlist) {
-    const card = document.createElement('div');
-    card.className = 'track-card'; // Reutilizando estilo de card
-    const image = playlist.image || 'https://via.placeholder.com/300x300?text=No+Image';
-
-    card.innerHTML = `
-        <div class="image-container">
-            <img src="${image}" alt="${playlist.name}">
-            <div class="play-overlay">
-                <i class="fas fa-list"></i>
-            </div>
-        </div>
-        <div class="track-info">
-            <h3 title="${playlist.name}">${playlist.name}</h3>
-            <p style="font-size: 0.8rem; color: #999;">Por ${playlist.owner}</p>
-        </div>
-    `;
-    // Ao clicar, poderia abrir a playlist no Spotify ou carregar as músicas dela
-    card.addEventListener('click', () => {
-        window.open(`https://open.spotify.com/playlist/${playlist.id}`, '_blank');
-    });
-    resultsGrid.appendChild(card);
-}
-
-function createArtistCard(artist) {
-    const card = document.createElement('div');
-    card.className = 'track-card';
-    const image = artist.image || 'https://via.placeholder.com/300x300?text=No+Image';
-
-    card.innerHTML = `
-        <div class="image-container" style="border-radius: 50%;">
-            <img src="${image}" alt="${artist.name}" style="border-radius: 50%;">
-        </div>
-        <div class="track-info" style="text-align: center; margin-top: 10px;">
-            <h3 title="${artist.name}" style="font-size: 1.1rem;">${artist.name}</h3>
-            <p style="font-size: 0.8rem; color: #999;">${artist.genres || 'Electronic'}</p>
-        </div>
-    `;
-    
-    card.addEventListener('click', () => {
-        // Ao clicar no artista, faz uma busca pelas músicas dele no app
         searchInput.value = artist.name;
         searchTracks();
     });
