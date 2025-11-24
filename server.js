@@ -91,66 +91,35 @@ app.get('/api/search-tracks', async (req, res) => {
     }
 });
 
-// Lista de Artistas VIP
+// Lista de Artistas VIP (IDs corrigidos)
 const VIP_ARTISTS = [
     "7f5Zgnp2spUuuzKplmRkt7", // Lost Frequencies
     "1vCWHaC5obZyTwC1KtKuS0", // Avicii
     "28gNT5JBFheIaDjlTxRlGw", // Vintage Culture
-    "5H8F6jYd5I5y3f6g8e5j5w", // James Hype
     "1vyhD5VmyZ7KMfW5gqLgo5", // Alok
     "1mYsTxnqsHf2AtchbsFqGE", // Jonas Blue
     "2o5jDhtHVPhrJdv3cEQ99Z", // Tiesto
     "60d24wfXkVzDSfLS6hyCjZ", // Martin Garrix
     "64KEffDW9EtZ1y2vGTVADx", // Marshmello
     "23fqKkggKUBHNkbKtXEls4", // Kygo
-    "00HzEL0vK4QzVjVwL090kI", // Calvin Harris
+    "7CajNmpbOovFoOoasH2HaY", // Calvin Harris
     "69GGBxA162lTqCwzJG5jLp", // The Chainsmokers
-    "8AfSCLyXnE9Hw9A8LpXg2e", // David Guetta
-    "83IP8IVgA7Qj8tp8I41Cgt", // Dimitri Vegas & Like Mike
+    "1Cs0zKBU1kc0i8ypK3B9ai", // David Guetta
     "5dS3l7WcDlR8H6Aunf3eUN", // Nicky Romero
     "68QoX5l02W0k2B8f59S6rX", // Artbat
-    "3g8vL37i3YQf0S_I6q6gY4", // anamē
     "251F94Hh5W8CRJkH6CYAHm", // Boris Brejcha
-    "58yEfbchgMDy8o35YhP4rj", // Jerro
-    "2GgO8771hJ7q57v3E0gBfa", // Jan Blomqvist
     "6b6JvA16Ym1FmSOtN2eYV9", // Anyma
     "10iNfWUDF6eBHjQzO0Kq0l", // Empire Of The Sun 
     "4C2k0W3FzmkWStSqDFLDy0", // Lane 8
-    "mj0VDI3z9r9iY6A3JBHw8X", // Tinlicker
-    "6G92VwLzF7F8H8gW4sH12o", // Keinemusik
-    "3h7_hH3e1vFkKq8JTSwE0J", // Rampa
-    "2_T3qU1l1J6f25uKj6s1hT", // Adam Port
-    "2jQ45jRj38Ww3n2J6g2Y5h", // &ME
-    "70lF5p1Xq2u8D4xHqI3uHq", // Miss Monique
-    "4a2Vf3hP1CgR9Dq9yvJ3t4", // Korolova
-    "2k0xmLj5KjUAnHlBGJsoUY", // KREAM
-    "5cM4D8wJg0FkXm4LhBqUzm", // Sultan + Shepard
-    "2o9wxRseDkU94ChZtT35hk",  // Afrojack
-    "4Z4S7YQvC6QvJqYwXj6U2k", // Agents Of Time
-    "4GgD5UeI4X9b7V6Vf2hV2J", // Adriatique
+    "2o9wxRseDkU94ChZtT35hk", // Afrojack
     "23FZEm4AcG3AwG5vL2c4lF", // Fred again..
     "7gbU1bk27MjYVrgpetzARu", // Chris Lake
     "2IF0LSLkGz2tT9SpzFhQY7", // Oliver Heldens
     "5fWl4uS0YVccWk6C7vgffG", // Nora En Pure
     "4tUZE38F7GmYxSnnBPM71K", // Meduza
-    "3D4Jfd5KKOjA6KkHh8PBYg", // Ownboss
     "4cdyqaBREB68H77QKCrKP1", // Dubdogz
-    "7t3uHlqH0pnbLtv1rnsqrA", // Cat Dealers
-    "6j8BqG5L5Hl1JgC6S6Mh5n", // Bruno Martini
     "0qM6SOGgW8PaeBnhp6Vz43", // Bhaskar
-    "2Qe6z6VAzFErFhNwtF9xS5", // KVSH
-    "40O66C1DUMYk0pZ96FA7nm", // NUZB
-    "12sJb8W5cTjLz3l3E2sT7A", // Carola
-    "1dG605neGtyfR3H3FnhI5Q", // Kohen
-    "7dUEw0n6T99vN3S58MTn5J",  // Chemical Surf
-    "3XFvR5N17GjVzC8qEaP1Tj", // ANNA
-    "5DqU86E0S3J7cQd18aW3bB", // JORD
-    "5yV9jH0S1ygo90ZJzzB6tS", // Fancy Inc
-    "2T3f05u1gHhE2yYfRk74yS", // Future Class
-    "0sLVD8XPSyCjFfFMHhELpF",  // Zerb
-    "7KkC7wXw2kS085g7p5Bq1w", // Antdot
-    "6j1mGjH4z0y1kGkGg6f5uO"  // Riascode
-
+    "3XFvR5N17GjVzC8qEaP1Tj"  // ANNA
 ];
 
 // ROTA 3: FAIXAS CURADAS (HOME)
@@ -235,25 +204,23 @@ app.get('/api/artists', async (req, res) => {
         console.log("Rota /api/artists chamada");
         const accessToken = await getAccessToken();
         
-        // Garante que VIP_ARTISTS tem itens
         if (!VIP_ARTISTS || VIP_ARTISTS.length === 0) {
             console.error("VIP_ARTISTS está vazio!");
             return res.status(500).json({ error: "Configuração de artistas ausente." });
         }
 
-        const selectedIds = VIP_ARTISTS.slice(0, 20).join(',');
-        console.log(`Buscando artistas: ${selectedIds}`);
+        const selectedIds = VIP_ARTISTS.join(',');
+        console.log(`Buscando ${VIP_ARTISTS.length} artistas`);
         
         const artistsUrl = `https://api.spotify.com/v1/artists?ids=${selectedIds}`;
         const response = await fetch(artistsUrl, { headers: { 'Authorization': `Bearer ${accessToken}` } });
         const data = await response.json();
 
         if (!data.artists) {
-            console.error("Spotify retornou erro ou sem artistas:", data);
+            console.error("Spotify retornou erro:", data);
             return res.status(404).json({ error: "Nenhum artista encontrado (Spotify)." });
         }
 
-        // Filtra nulos e mapeia
         const artists = data.artists
             .filter(a => a !== null)
             .map(a => ({
@@ -264,6 +231,7 @@ app.get('/api/artists', async (req, res) => {
                 popularity: a.popularity
             }));
 
+        console.log(`Retornando ${artists.length} artistas`);
         res.json({ artists });
 
     } catch (error) {
