@@ -209,29 +209,85 @@ async function loadCuratedTracks() {
     }
 }
 
-// 2. DISCOVER (New Releases / Top)
+// 2. DISCOVER (Gêneros do Beatport)
+const BEATPORT_GENRES = [
+    { name: "House", query: "House Music Top 100" },
+    { name: "Melodic House & Techno", query: "Melodic House & Techno Top 100" },
+    { name: "Mainstage", query: "Mainstage Festival Big Room" },
+    { name: "Progressive House", query: "Progressive House Top 100" },
+    { name: "Afro House", query: "Afro House Top 100" },
+    { name: "Tech House", query: "Tech House Top 100" },
+    { name: "Organic House", query: "Organic House Downtempo" },
+    { name: "Funky House", query: "Funky House Classics" },
+    { name: "Electronica", query: "Electronica Top 100" },
+    { name: "Bass House", query: "Bass House Top 100" }
+];
+
 async function loadDiscover() {
-    resultsGrid.innerHTML = '<div class="placeholder-message"><p>Descobrindo novidades...</p></div>';
-    document.querySelector('.section-title').innerText = 'Discover: Top Electronic';
+    resultsGrid.innerHTML = '';
+    document.querySelector('.section-title').innerText = 'Discover: Gêneros Populares';
+    
+    BEATPORT_GENRES.forEach(genre => createGenreCard(genre));
+}
+
+function createGenreCard(genre) {
+    const card = document.createElement('div');
+    card.className = 'track-card';
+    
+    // Usando um gradiente ou imagem genérica para gêneros
+    card.innerHTML = `
+        <div class="image-container" style="background: linear-gradient(45deg, #1db954, #191414); display: flex; align-items: center; justify-content: center;">
+            <i class="fas fa-compact-disc" style="font-size: 4rem; color: white; opacity: 0.8;"></i>
+            <div class="play-overlay">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+        <div class="track-info">
+            <h3 title="${genre.name}">${genre.name}</h3>
+            <p style="font-size: 0.8rem; color: #999;">Explorar Top 100</p>
+        </div>
+    `;
+
+    card.addEventListener('click', () => loadGenreTracks(genre));
+    resultsGrid.appendChild(card);
+}
+
+async function loadGenreTracks(genre) {
+    resultsGrid.innerHTML = `<div class="placeholder-message"><p>Buscando as melhores de ${genre.name}...</p></div>`;
+    document.querySelector('.section-title').innerText = `Discover: ${genre.name}`;
 
     try {
-        const res = await fetch(`${API_BASE}/discover`);
+        const res = await fetch(`${API_BASE}/discover?genre=${encodeURIComponent(genre.query)}`);
         const data = await res.json();
 
         if (data.trackIds && data.trackIds.length > 0) {
             resultsGrid.innerHTML = '';
+            
+            // Adiciona botão de voltar
+            const backBtn = document.createElement('button');
+            backBtn.innerText = '← Voltar para Gêneros';
+            backBtn.className = 'home-btn'; // Reutiliza estilo
+            backBtn.style.marginBottom = '20px';
+            backBtn.onclick = loadDiscover;
+            resultsGrid.parentNode.insertBefore(backBtn, resultsGrid);
+            
+            // Limpa o botão de voltar anterior se houver (gambiarra rápida, ideal seria gerenciar melhor o estado)
+            const oldBtns = document.querySelectorAll('.home-btn');
+            if(oldBtns.length > 1) oldBtns[0].remove();
+
             const trackPromises = data.trackIds.map(id => 
                 fetch(`${API_BASE}/full-track?id=${id}`).then(res => res.json()).catch(err => null)
             );
             const tracks = await Promise.all(trackPromises);
             const validTracks = tracks.filter(t => t !== null && !t.error);
             validTracks.forEach(createTrackCard);
+            
         } else {
-            resultsGrid.innerHTML = '<div class="placeholder-message"><p>Nada encontrado no momento.</p></div>';
+            resultsGrid.innerHTML = '<div class="placeholder-message"><p>Nada encontrado para este gênero.</p></div>';
         }
     } catch (e) {
-        console.error("Erro Discover:", e);
-        resultsGrid.innerHTML = '<div class="placeholder-message" style="color: #ff5555;"><p>Erro ao carregar Discover.</p></div>';
+        console.error("Erro Genre:", e);
+        resultsGrid.innerHTML = '<div class="placeholder-message" style="color: #ff5555;"><p>Erro ao carregar gênero.</p></div>';
     }
 }
 
