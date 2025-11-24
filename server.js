@@ -93,23 +93,65 @@ app.get('/api/search-tracks', async (req, res) => {
 
 // Lista de Artistas VIP (IDs corrigidos - apenas música eletrônica)
 const VIP_ARTISTS = [
+    "7f5Zgnp2spUuuzKplmRkt7", // Lost Frequencies
     "1vCWHaC5f2uS3yhpwWbIA6", // Avicii
+    "60d24wfXkVzDSfLS6hyCjZ", // Martin Garrix
+    "4D75GcNG95ebPtNvoNVXhz", // Afrojack
     "1Cs0zKBU1kc0i8ypK3B9ai", // David Guetta
     "28uJnu5EsrGml2tBd7y8ts", // Vintage Culture
     "0NGAZxHanS9e0iNHpR8f2W", // Alok
     "1HBjj22wzbscIZ9sEb5dyf", // Jonas Blue
+    "23fqKkggKUBHNkbKtXEls4", // Kygo
+    "4AVFqumd2ogHFlRbKIjp1t", // Alesso
+    "1xNmvlEiICkRlRGqlNFZ43", // Axwell
+    "6hyMWrxGBsOx6sWcVj1DqP", // Sebastian Ingrosso
+    "1h6Cn3P4NGzXbaXidqURXs", // Swedish House Mafia
+    "5sm0jQ1mq0dusiLtDJ2b4R", // Eric Prydz
+    "5ChF3i92IPZHduM7jN3dpg", // Nicky Romero
     "37czgDRfGMvgRiUKHvnnhj", // Ownboss
+    "61lyPtntblHJvA7FMMhi7E", // Duke Dumont
+    "6nS5roXSAGhTGr34W6n7Et", // Disclosure
     "3wkaDi2HJV3eCaBJ4iH6om", // ANNA
+    "29TpNOsTNYbLb6Xa10H0PR", // Miss Monique
+    "0I6oCyQQ1Q50q97y9B9gAx", // Korolova
+    "6htWLP8aiuf19FYMA4VQAZ", // Massano
+    "58wlWYajhaIloGV3GlPd9M", // Disorder
+    "2uGKgNuq7MnKksXiSO6HjB", // KVSH
+    "4cdyqaBREB68H77QKCrKP1", // Dubdogz
+    "2dhLVCzAEMbAu1SSkAoOGV", // JØRD
     "4oLeXFyACqeem2VImYeBFe", // Fred again.. 
+    "1uRVM0wBdtyEuU582EeKJM", // NOTION
+    "43BxCL6t4c73BQnIJtry5v", // James Hype
+    "2CpLIMBoE2ZzyY3ZBCRZ7j", // BUNT.
+    "5Igpc9iLZ3YGtKeYfSrrOE", // Chris Lake
+    "1VJ0briNOlXRtJUAzoUJdt", // FISHER
+    "4qLwtWhlhyAoQ4S9mSrDW9", // Odd Mob
+    "5czbzNZZfWpyFgZyfT3Mkk", // SIDEPIECE
+    "7kNqXtgeIwFtelmRjWv205", // John Summit
+    "0DdDnziut7wOo6cAYWVZC5", // KREAM
+    "4iBwchw0U0GZv5RfVYSMxN", // Anyma
+    "3BkRu2TGd2I1uBxZKddfg1", // ARTBAT
+    "6Jbyd4qzEtbFtswZP1o6Ht", // Agents Of Time
+    "6QSwQEz8CDMg8Rqk8dEkxS", // Mathame
     "24DO0PijjITGIEWsO8XaPs", // Nora En Pure
     "0xRXCcSX89eobfrshSVdyu", // Meduza
     "6kT18gnkVrCz8xJQcrib7L", // Bhaskar
+    "37UXlMGND0Tr7Su43RxHQ0", // Bruno Be
+    "2jFK9ZXWDd7auJvfNfBcuC", // Future Class
     "2RuFDYlPPfFaYgj5dqz9lD", // Boris Brejcha
     "3sZvCZHU2V2idOYyUl3fBi", // Anamē 
     "14Tg9FvbNismPR1PJHxRau", // Sultan+Shepard
+    "02DWGcShQivFepRvGJ7xhB", // Adriatique
     "1Zz6NBe8UIZjm88TvehFtx", // Le Youth
     "1WHFu22zN1C6F11Z1rt12K", // Jerro
-    "67hb7towEyKvt5Z8Bx306c"  // Empire Of The Sun 
+    "7MmHXD2ESooP0XdgrVuKTK", // Marten Lou
+    "08jywfUS0hp8XYlYs0cvz8", // Rampa
+    "5mIowAJMp7RKNheelruV5z", // &ME
+    "2loEsOijJ6XiGzWYFXMIRk", // Adam Port
+    "26WKgv73kRHD0gEDKD1i8j", // Keinemusik
+    "67hb7towEyKvt5Z8Bx306c", // Empire Of The Sun 
+    "4sTQVOfp9vEMCemLw50sbu", // Galantis
+    "1bj5GrcLom5gZFF5t949Xl", // Martin Solveig
 ];
 
 // ROTA 3: FAIXAS CURADAS (HOME)
