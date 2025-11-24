@@ -10,10 +10,17 @@
 <body>
 
     <header>
-        <button id="home-button" class="home-btn" title="Voltar ao início">
-            <i class="fas fa-home"></i>
-        </button>
-        <h1>EchoPort</h1>
+        <div class="logo-nav-group">
+            <h1>EchoPort</h1>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#" id="home-link" class="active"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#" id="discover-link"><i class="fas fa-compass"></i> Discover</a></li>
+                    <li><a href="#" id="playlists-link"><i class="fas fa-list"></i> Playlists</a></li>
+                    <li><a href="#" id="artists-link"><i class="fas fa-user"></i> Artists</a></li>
+                </ul>
+            </nav>
+        </div>
         <div class="search-container">
             <input type="text" id="search-input" placeholder="Buscar por artista de música eletrônica...">
             <button id="search-button">Buscar</button>
