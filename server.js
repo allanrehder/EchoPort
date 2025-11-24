@@ -168,6 +168,45 @@ app.get('/api/curated-tracks', async (req, res) => {
         const trackIds = data.tracks.slice(0, 10).map(t => t.id);
         res.json({ trackIds });
 
+    } catch (error) {
+        console.error("Erro curadoria:", error.message);
+        res.status(500).json({ error: 'Falha ao buscar curadoria.' });
+    }
+});
+
+// ROTA 4: DISCOVER (Novos lançamentos ou Playlist Top)
+app.get('/api/discover', async (req, res) => {
+    try {
+        const genre = req.query.genre;
+        const query = genre ? `${genre}` : 'Top Electronic 2024';
+        const accessToken = await getAccessToken();
+        
+        const searchUrl = `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=playlist&limit=1&market=US`;
+        const searchRes = await fetch(searchUrl, { headers: { 'Authorization': `Bearer ${accessToken}` } });
+        const searchData = await searchRes.json();
+
+        if (!searchData.playlists || searchData.playlists.items.length === 0) {
+            return res.status(404).json({ error: "Nenhuma playlist encontrada." });
+        }
+
+        const playlistId = searchData.playlists.items[0].id;
+        const playlistTracksUrl = `https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=20&market=US`;
+        const tracksRes = await fetch(playlistTracksUrl, { headers: { 'Authorization': `Bearer ${accessToken}` } });
+        const tracksData = await tracksRes.json();
+
+        const trackIds = tracksData.items.map(item => item.track.id).filter(id => id);
+        res.json({ trackIds });
+
+    } catch (error) {
+        console.error("Erro discover:", error.message);
+        res.status(500).json({ error: 'Falha ao buscar discover.' });
+    }
+});
+
+// ROTA 5: PLAYLISTS (Listar playlists de eletrônica)
+app.get('/api/playlists', async (req, res) => {
+    try {
+        const accessToken = await getAccessToken();
         const searchUrl = `https://api.spotify.com/v1/search?q=Electronic+Dance+Music&type=playlist&limit=12&market=US`;
         const searchRes = await fetch(searchUrl, { headers: { 'Authorization': `Bearer ${accessToken}` } });
         const searchData = await searchRes.json();
@@ -193,23 +232,37 @@ app.get('/api/curated-tracks', async (req, res) => {
 // ROTA 6: ARTISTS (Listar DJs VIPs)
 app.get('/api/artists', async (req, res) => {
     try {
+        console.log("Rota /api/artists chamada");
         const accessToken = await getAccessToken();
-        // Pega 20 artistas aleatórios da lista VIP ou os primeiros 20
-        const selectedIds = VIP_ARTISTS.slice(0, 20).join(',');
-        const artistsUrl = `https://api.spotify.com/v1/artists?ids=${selectedIds}`;
         
+        // Garante que VIP_ARTISTS tem itens
+        if (!VIP_ARTISTS || VIP_ARTISTS.length === 0) {
+            console.error("VIP_ARTISTS está vazio!");
+            return res.status(500).json({ error: "Configuração de artistas ausente." });
+        }
+
+        const selectedIds = VIP_ARTISTS.slice(0, 20).join(',');
+        console.log(`Buscando artistas: ${selectedIds}`);
+        
+        const artistsUrl = `https://api.spotify.com/v1/artists?ids=${selectedIds}`;
         const response = await fetch(artistsUrl, { headers: { 'Authorization': `Bearer ${accessToken}` } });
         const data = await response.json();
 
-        if (!data.artists) return res.status(404).json({ error: "Nenhum artista encontrado." });
+        if (!data.artists) {
+            console.error("Spotify retornou erro ou sem artistas:", data);
+            return res.status(404).json({ error: "Nenhum artista encontrado (Spotify)." });
+        }
 
-        const artists = data.artists.map(a => ({
-            id: a.id,
-            name: a.name,
-            image: a.images[0]?.url,
-            genres: a.genres.slice(0, 2).join(', '),
-            popularity: a.popularity
-        }));
+        // Filtra nulos e mapeia
+        const artists = data.artists
+            .filter(a => a !== null)
+            .map(a => ({
+                id: a.id,
+                name: a.name,
+                image: a.images && a.images.length > 0 ? a.images[0].url : null,
+                genres: a.genres && a.genres.length > 0 ? a.genres.slice(0, 2).join(', ') : 'Electronic',
+                popularity: a.popularity
+            }));
 
         res.json({ artists });
 
