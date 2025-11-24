@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EchoPort - Discover Electronic Music</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <button id="home-button" class="home-btn" title="Voltar ao início">
+            <i class="fas fa-home"></i>
+        </button>
+        <h1>EchoPort</h1>
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Buscar por artista de música eletrônica...">
+            <button id="search-button">Buscar</button>
+        </div>
+    </header>
+
+    <main>
+        <h2 class="section-title">Resultados</h2>
+        
+        <div id="results-grid" class="track-grid">
+            <!-- Os cards serão inseridos aqui via JS -->
+            <div class="placeholder-message">
+                <i class="fas fa-music" style="font-size: 3rem; margin-bottom: 1rem; color: #333;"></i>
+                <p>Carregando músicas...</p>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <p>Dados fornecidos pelo Spotify Web API | Análise técnica via Tunebat</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

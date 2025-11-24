@@ -1,0 +1,33 @@
+# Dependências
+node_modules/
+node_modules.rar
+
+# Variáveis de ambiente (IMPORTANTE: nunca subir credenciais!)
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+*.log
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs e editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build e cache
+dist/
+build/
+.cache/
+.temp/
