@@ -209,24 +209,50 @@ async function loadCuratedTracks() {
     }
 }
 
-// 2. DISCOVER (Gêneros do Beatport)
+// 2. DISCOVER (Novidades Gerais)
+async function loadDiscover() {
+    resultsGrid.innerHTML = '<div class="placeholder-message"><p>Buscando novidades da música eletrônica...</p></div>';
+    document.querySelector('.section-title').innerText = 'Discover: Destaques da Semana';
+
+    try {
+        // Usa a rota de discover sem gênero para pegar um Top geral
+        const res = await fetch(`${API_BASE}/discover`);
+        const data = await res.json();
+
+        if (data.trackIds && data.trackIds.length > 0) {
+            resultsGrid.innerHTML = '';
+            const trackPromises = data.trackIds.map(id => 
+                fetch(`${API_BASE}/full-track?id=${id}`).then(res => res.json()).catch(err => null)
+            );
+            const tracks = await Promise.all(trackPromises);
+            const validTracks = tracks.filter(t => t !== null && !t.error);
+            validTracks.forEach(createTrackCard);
+        } else {
+            resultsGrid.innerHTML = '<div class="placeholder-message"><p>Nenhuma novidade encontrada.</p></div>';
+        }
+    } catch (e) {
+        console.error("Erro Discover:", e);
+        resultsGrid.innerHTML = '<div class="placeholder-message" style="color: #ff5555;"><p>Erro ao carregar Discover.</p></div>';
+    }
+}
+
+// 3. PLAYLISTS (Gêneros do Beatport)
 const BEATPORT_GENRES = [
-    { name: "House", query: "House Music Top 100" },
-    { name: "Melodic House & Techno", query: "Melodic House & Techno Top 100" },
-    { name: "Mainstage", query: "Mainstage Festival Big Room" },
-    { name: "Progressive House", query: "Progressive House Top 100" },
-    { name: "Afro House", query: "Afro House Top 100" },
-    { name: "Tech House", query: "Tech House Top 100" },
-    { name: "Organic House", query: "Organic House Downtempo" },
-    { name: "Funky House", query: "Funky House Classics" },
-    { name: "Electronica", query: "Electronica Top 100" },
-    { name: "Bass House", query: "Bass House Top 100" }
+    { name: "House", query: "Beatport House Top 100" },
+    { name: "Melodic House & Techno", query: "Beatport Melodic House & Techno Top 100" },
+    { name: "Mainstage", query: "Beatport Mainstage Top 100" },
+    { name: "Progressive House", query: "Beatport Progressive House Top 100" },
+    { name: "Afro House", query: "Beatport Afro House Top 100" },
+    { name: "Tech House", query: "Beatport Tech House Top 100" },
+    { name: "Organic House", query: "Beatport Organic House Top 100" },
+    { name: "Funky House", query: "Beatport Funky House Top 100" },
+    { name: "Electronica", query: "Beatport Electronica Top 100" },
+    { name: "Bass House", query: "Beatport Bass House Top 100" }
 ];
 
-async function loadDiscover() {
+async function loadPlaylists() {
     resultsGrid.innerHTML = '';
-    document.querySelector('.section-title').innerText = 'Discover: Gêneros Populares';
-    
+    document.querySelector('.section-title').innerText = 'Playlists: Gêneros Beatport';
     BEATPORT_GENRES.forEach(genre => createGenreCard(genre));
 }
 
@@ -234,17 +260,16 @@ function createGenreCard(genre) {
     const card = document.createElement('div');
     card.className = 'track-card';
     
-    // Usando um gradiente ou imagem genérica para gêneros
     card.innerHTML = `
-        <div class="image-container" style="background: linear-gradient(45deg, #1db954, #191414); display: flex; align-items: center; justify-content: center;">
-            <i class="fas fa-compact-disc" style="font-size: 4rem; color: white; opacity: 0.8;"></i>
+        <div class="image-container" style="background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%); display: flex; align-items: center; justify-content: center;">
+            <i class="fas fa-stream" style="font-size: 4rem; color: white; opacity: 0.9;"></i>
             <div class="play-overlay">
-                <i class="fas fa-search"></i>
+                <i class="fas fa-play"></i>
             </div>
         </div>
         <div class="track-info">
             <h3 title="${genre.name}">${genre.name}</h3>
-            <p style="font-size: 0.8rem; color: #999;">Explorar Top 100</p>
+            <p style="font-size: 0.8rem; color: #999;">Top 100 Beatport (Spotify Mirror)</p>
         </div>
     `;
 
@@ -253,8 +278,8 @@ function createGenreCard(genre) {
 }
 
 async function loadGenreTracks(genre) {
-    resultsGrid.innerHTML = `<div class="placeholder-message"><p>Buscando as melhores de ${genre.name}...</p></div>`;
-    document.querySelector('.section-title').innerText = `Discover: ${genre.name}`;
+    resultsGrid.innerHTML = `<div class="placeholder-message"><p>Carregando Top 100 de ${genre.name}...</p></div>`;
+    document.querySelector('.section-title').innerText = `Playlist: ${genre.name}`;
 
     try {
         const res = await fetch(`${API_BASE}/discover?genre=${encodeURIComponent(genre.query)}`);
@@ -262,19 +287,8 @@ async function loadGenreTracks(genre) {
 
         if (data.trackIds && data.trackIds.length > 0) {
             resultsGrid.innerHTML = '';
+            // Botão de voltar removido conforme solicitado
             
-            // Adiciona botão de voltar
-            const backBtn = document.createElement('button');
-            backBtn.innerText = '← Voltar para Gêneros';
-            backBtn.className = 'home-btn'; // Reutiliza estilo
-            backBtn.style.marginBottom = '20px';
-            backBtn.onclick = loadDiscover;
-            resultsGrid.parentNode.insertBefore(backBtn, resultsGrid);
-            
-            // Limpa o botão de voltar anterior se houver (gambiarra rápida, ideal seria gerenciar melhor o estado)
-            const oldBtns = document.querySelectorAll('.home-btn');
-            if(oldBtns.length > 1) oldBtns[0].remove();
-
             const trackPromises = data.trackIds.map(id => 
                 fetch(`${API_BASE}/full-track?id=${id}`).then(res => res.json()).catch(err => null)
             );
@@ -283,12 +297,59 @@ async function loadGenreTracks(genre) {
             validTracks.forEach(createTrackCard);
             
         } else {
-            resultsGrid.innerHTML = '<div class="placeholder-message"><p>Nada encontrado para este gênero.</p></div>';
+            resultsGrid.innerHTML = '<div class="placeholder-message"><p>Nenhuma faixa encontrada para este gênero.</p></div>';
         }
     } catch (e) {
         console.error("Erro Genre:", e);
         resultsGrid.innerHTML = '<div class="placeholder-message" style="color: #ff5555;"><p>Erro ao carregar gênero.</p></div>';
     }
+}
+
+// 4. ARTISTS
+async function loadArtists() {
+    resultsGrid.innerHTML = '<div class="placeholder-message"><p>Carregando artistas...</p></div>';
+    document.querySelector('.section-title').innerText = 'Artistas em Destaque';
+
+    try {
+        const res = await fetch(`${API_BASE}/artists`);
+        const data = await res.json();
+
+        if (data.artists && data.artists.length > 0) {
+            resultsGrid.innerHTML = '';
+            data.artists.forEach(createArtistCard);
+        } else {
+            resultsGrid.innerHTML = '<div class="placeholder-message"><p>Nenhum artista encontrado.</p></div>';
+        }
+    } catch (e) {
+        console.error("Erro Artists:", e);
+        resultsGrid.innerHTML = '<div class="placeholder-message" style="color: #ff5555;"><p>Erro ao carregar Artistas.</p></div>';
+    }
+}
+
+function createArtistCard(artist) {
+    const card = document.createElement('div');
+    card.className = 'track-card';
+    const image = artist.image || 'https://via.placeholder.com/300x300?text=No+Image';
+
+    // Estilo inline reforçado para garantir a imagem redonda
+    card.innerHTML = `
+        <div class="image-container" style="border-radius: 50%; overflow: hidden; aspect-ratio: 1/1;">
+            <img src="${image}" alt="${artist.name}" style="width: 100%; height: 100%; object-fit: cover;">
+            <div class="play-overlay" style="border-radius: 50%;">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+        <div class="track-info" style="text-align: center; margin-top: 10px;">
+            <h3 title="${artist.name}" style="font-size: 1.1rem;">${artist.name}</h3>
+            <p style="font-size: 0.8rem; color: #999;">${artist.genres || 'Electronic'}</p>
+        </div>
+    `;
+    
+    card.addEventListener('click', () => {
+        searchInput.value = artist.name;
+        searchTracks();
+    });
+    resultsGrid.appendChild(card);
 }
 
 // 3. PLAYLISTS
