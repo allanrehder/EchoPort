@@ -91,35 +91,25 @@ app.get('/api/search-tracks', async (req, res) => {
     }
 });
 
-// Lista de Artistas VIP (IDs corrigidos)
+// Lista de Artistas VIP (IDs corrigidos - apenas música eletrônica)
 const VIP_ARTISTS = [
-    "7f5Zgnp2spUuuzKplmRkt7", // Lost Frequencies
-    "1vCWHaC5obZyTwC1KtKuS0", // Avicii
-    "28gNT5JBFheIaDjlTxRlGw", // Vintage Culture
-    "1vyhD5VmyZ7KMfW5gqLgo5", // Alok
-    "1mYsTxnqsHf2AtchbsFqGE", // Jonas Blue
-    "2o5jDhtHVPhrJdv3cEQ99Z", // Tiesto
-    "60d24wfXkVzDSfLS6hyCjZ", // Martin Garrix
-    "64KEffDW9EtZ1y2vGTVADx", // Marshmello
-    "23fqKkggKUBHNkbKtXEls4", // Kygo
-    "7CajNmpbOovFoOoasH2HaY", // Calvin Harris
-    "69GGBxA162lTqCwzJG5jLp", // The Chainsmokers
+    "1vCWHaC5f2uS3yhpwWbIA6", // Avicii
     "1Cs0zKBU1kc0i8ypK3B9ai", // David Guetta
-    "5dS3l7WcDlR8H6Aunf3eUN", // Nicky Romero
-    "68QoX5l02W0k2B8f59S6rX", // Artbat
-    "251F94Hh5W8CRJkH6CYAHm", // Boris Brejcha
-    "6b6JvA16Ym1FmSOtN2eYV9", // Anyma
-    "10iNfWUDF6eBHjQzO0Kq0l", // Empire Of The Sun 
-    "4C2k0W3FzmkWStSqDFLDy0", // Lane 8
-    "2o9wxRseDkU94ChZtT35hk", // Afrojack
-    "23FZEm4AcG3AwG5vL2c4lF", // Fred again..
-    "7gbU1bk27MjYVrgpetzARu", // Chris Lake
-    "2IF0LSLkGz2tT9SpzFhQY7", // Oliver Heldens
-    "5fWl4uS0YVccWk6C7vgffG", // Nora En Pure
-    "4tUZE38F7GmYxSnnBPM71K", // Meduza
-    "4cdyqaBREB68H77QKCrKP1", // Dubdogz
-    "0qM6SOGgW8PaeBnhp6Vz43", // Bhaskar
-    "3XFvR5N17GjVzC8qEaP1Tj"  // ANNA
+    "28uJnu5EsrGml2tBd7y8ts", // Vintage Culture
+    "0NGAZxHanS9e0iNHpR8f2W", // Alok
+    "1HBjj22wzbscIZ9sEb5dyf", // Jonas Blue
+    "37czgDRfGMvgRiUKHvnnhj", // Ownboss
+    "3wkaDi2HJV3eCaBJ4iH6om", // ANNA
+    "4oLeXFyACqeem2VImYeBFe", // Fred again.. 
+    "24DO0PijjITGIEWsO8XaPs", // Nora En Pure
+    "0xRXCcSX89eobfrshSVdyu", // Meduza
+    "6kT18gnkVrCz8xJQcrib7L", // Bhaskar
+    "2RuFDYlPPfFaYgj5dqz9lD", // Boris Brejcha
+    "3sZvCZHU2V2idOYyUl3fBi", // Anamē 
+    "14Tg9FvbNismPR1PJHxRau", // Sultan+Shepard
+    "1Zz6NBe8UIZjm88TvehFtx", // Le Youth
+    "1WHFu22zN1C6F11Z1rt12K", // Jerro
+    "67hb7towEyKvt5Z8Bx306c"  // Empire Of The Sun 
 ];
 
 // ROTA 3: FAIXAS CURADAS (HOME)
