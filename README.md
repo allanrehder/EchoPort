@@ -8,7 +8,6 @@
 - 🎧 **Preview de Áudio** - Ouça trechos de 30 segundos direto no navegador
 - 📊 **Análise Musical** - Link direto para Tunebat com informações de BPM, Key e mais
 - 🎨 **Interface Moderna** - Design responsivo e intuitivo
-- 🎼 **Curadoria VIP** - Seleção de artistas de Electronic Music ao carregar a página
 
 ## 🚀 Tecnologias
 
@@ -116,4 +115,4 @@ Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou pull r
 
 ---
 
-Desenvolvido com ❤️ por [Allan Rehder](https://github.com/allanrehder)
+Desenvolvido com ❤️ por [Allan Rehder](https://github.com/allanrehder) e créditos e menções honrosas a Alura pela imersão DEV
