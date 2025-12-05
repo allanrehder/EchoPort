@@ -68,6 +68,30 @@ O servidor estará rodando em `http://localhost:3000`
 
 Abra o arquivo `index.html` em um navegador ou use um servidor local como Live Server (VS Code).
 
+## 🌐 Deploy em Produção
+
+Para fazer deploy do **EchoPort** em produção (backend no Render + frontend no GitHub Pages), siga o guia completo:
+
+📖 **[Guia de Deploy Completo](DEPLOY.md)**
+
+### Deploy Rápido
+
+1. **Backend** (Render):
+
+   - Conecte seu repositório no [Render](https://render.com)
+   - Configure as variáveis de ambiente (Spotify credentials)
+   - Deploy automático!
+
+2. **Frontend** (GitHub Pages):
+   - Ative GitHub Pages em Settings → Pages
+   - Selecione branch `main` e pasta `/ (root)`
+   - Pronto!
+
+**URLs de Produção:**
+
+- Frontend: `https://allanrehder.github.io/EchoPort/`
+- Backend: `https://echoport-api.onrender.com` (atualize em `script.js`)
+
 ## 🎯 Como Usar
 
 1. **Busca por Artista**: Digite o nome de um artista no campo de busca

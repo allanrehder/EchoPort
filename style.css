@@ -275,6 +275,36 @@ footer p {
     color: var(--text-secondary);
 }
 
+/* --- ARTIST CARDS (Imagens Redondas) --- */
+.artist-card .image-container {
+    border-radius: 50% !important;
+    overflow: hidden;
+}
+
+.artist-card .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.artist-card .play-overlay {
+    border-radius: 50% !important;
+}
+
+.artist-card .track-info {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.artist-card .track-info h3 {
+    font-size: 1.1rem;
+}
+
+.artist-card .track-info p {
+    font-size: 0.8rem;
+    color: #999;
+}
+
 /* --- RESPONSIVE --- */
 @media (max-width: 768px) {
     header {

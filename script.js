@@ -1,4 +1,7 @@
-const API_BASE = 'http://localhost:3000/api';
+// Configuração dinâmica de API (local vs produção)
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3000/api'
+    : 'https://echoport-api.onrender.com/api'; // ATUALIZE COM SUA URL DO RENDER APÓS DEPLOY
 
 const searchInput = document.getElementById('search-input');
 const searchButton = document.getElementById('search-button');
@@ -327,20 +330,19 @@ async function loadArtists() {
 
 function createArtistCard(artist) {
     const card = document.createElement('div');
-    card.className = 'track-card';
+    card.className = 'track-card artist-card';
     const image = artist.image || 'https://via.placeholder.com/300x300?text=No+Image';
 
-    // Estilo inline reforçado para garantir a imagem redonda
     card.innerHTML = `
-        <div class="image-container" style="border-radius: 50%; overflow: hidden; aspect-ratio: 1/1;">
-            <img src="${image}" alt="${artist.name}" style="width: 100%; height: 100%; object-fit: cover;">
-            <div class="play-overlay" style="border-radius: 50%;">
+        <div class="image-container">
+            <img src="${image}" alt="${artist.name}">
+            <div class="play-overlay">
                 <i class="fas fa-search"></i>
             </div>
         </div>
-        <div class="track-info" style="text-align: center; margin-top: 10px;">
-            <h3 title="${artist.name}" style="font-size: 1.1rem;">${artist.name}</h3>
-            <p style="font-size: 0.8rem; color: #999;">${artist.genres || 'Electronic'}</p>
+        <div class="track-info">
+            <h3 title="${artist.name}">${artist.name}</h3>
+            <p>${artist.genres || 'Electronic'}</p>
         </div>
     `;
     

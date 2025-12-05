@@ -6,11 +6,15 @@ const fullTrackHandler = require('./fullTrackHandler');
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+    }
     next();
 });
 
@@ -241,27 +245,42 @@ app.get('/api/artists', async (req, res) => {
             return res.status(500).json({ error: "Configuração de artistas ausente." });
         }
 
-        const selectedIds = VIP_ARTISTS.join(',');
-        console.log(`Buscando ${VIP_ARTISTS.length} artistas`);
+        console.log(`Total de artistas VIP: ${VIP_ARTISTS.length}`);
         
-        const artistsUrl = `https://api.spotify.com/v1/artists?ids=${selectedIds}`;
-        const response = await fetch(artistsUrl, { headers: { 'Authorization': `Bearer ${accessToken}` } });
-        const data = await response.json();
+        // A API do Spotify permite no máximo 50 artistas por requisição
+        const BATCH_SIZE = 50;
+        const allArtists = [];
+        
+        // Dividir em lotes de 50
+        for (let i = 0; i < VIP_ARTISTS.length; i += BATCH_SIZE) {
+            const batch = VIP_ARTISTS.slice(i, i + BATCH_SIZE);
+            const selectedIds = batch.join(',');
+            
+            console.log(`Buscando lote ${Math.floor(i / BATCH_SIZE) + 1}: ${batch.length} artistas`);
+            
+            const artistsUrl = `https://api.spotify.com/v1/artists?ids=${selectedIds}`;
+            const response = await fetch(artistsUrl, { headers: { 'Authorization': `Bearer ${accessToken}` } });
+            const data = await response.json();
 
-        if (!data.artists) {
-            console.error("Spotify retornou erro:", data);
+            if (data.artists) {
+                allArtists.push(...data.artists.filter(a => a !== null));
+            } else {
+                console.error("Spotify retornou erro no lote:", data);
+            }
+        }
+
+        if (allArtists.length === 0) {
+            console.error("Nenhum artista foi retornado pelo Spotify");
             return res.status(404).json({ error: "Nenhum artista encontrado (Spotify)." });
         }
 
-        const artists = data.artists
-            .filter(a => a !== null)
-            .map(a => ({
-                id: a.id,
-                name: a.name,
-                image: a.images && a.images.length > 0 ? a.images[0].url : null,
-                genres: a.genres && a.genres.length > 0 ? a.genres.slice(0, 2).join(', ') : 'Electronic',
-                popularity: a.popularity
-            }));
+        const artists = allArtists.map(a => ({
+            id: a.id,
+            name: a.name,
+            image: a.images && a.images.length > 0 ? a.images[0].url : null,
+            genres: a.genres && a.genres.length > 0 ? a.genres.slice(0, 2).join(', ') : 'Electronic',
+            popularity: a.popularity
+        }));
 
         console.log(`Retornando ${artists.length} artistas`);
         res.json({ artists });
